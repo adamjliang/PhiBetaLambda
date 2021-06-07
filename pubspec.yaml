@@ -24,11 +24,15 @@ dependencies:
   flutter:
     sdk: flutter
   url_launcher: ^5.5.0
-  cloud_firestore: ^0.13.7
+  cloud_firestore: ^0.14.1+3
   table_calendar: ^2.2.3
-  material_design_icons_flutter: 4.0.5345
+  material_design_icons_flutter: ^4.0.5345
   geolocator: ^5.3.2+2
-  
+  firebase_storage: ^4.0.1
+  image_picker: ^0.6.7+12
+  firebase_core: ^0.5.0+1
+  font_awesome_flutter: ^8.10.0
+
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^0.1.3
@@ -47,6 +51,7 @@ flutter:
   assets: 
     - assets/pbllogo.png
     - assets/pblbgimage.jpg
+    - assets/default_profile_pic.jpg
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.

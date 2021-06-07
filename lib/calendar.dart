@@ -10,9 +10,8 @@ class CalendarPage extends StatefulWidget {
   _CalendarPageState createState() => new _CalendarPageState();
 }
 
-class _CalendarPageState extends State<CalendarPage> with TickerProviderStateMixin {
-  
-  
+class _CalendarPageState extends State<CalendarPage>
+    with TickerProviderStateMixin {
   Map<DateTime, List> _pblEvents;
   Map<DateTime, List> _personalEvents;
   Map<DateTime, List> _masterEvents;
@@ -38,11 +37,9 @@ class _CalendarPageState extends State<CalendarPage> with TickerProviderStateMix
       // _selectedDay.subtract(Duration(days: 30)): ['Event A0', 'Event B0', 'Event C0', 'Event A0', 'Event B0', 'Event C0', 'Event A0', 'Event B0', 'Event C0']
       // _selectedDay: ['Event A7', 'Event B7', 'Event C7', 'Event D7'],
       // _selectedDay.add(Duration(days: 1)): ['Event A8', 'Event B8', 'Event C8', 'Event D8'],
-      
     };
     _personalEvents = {
       //DateTime.utc(2020, 7, 9): ['t'],
-      
     };
 
     _emptyEvents = {};
@@ -50,8 +47,6 @@ class _CalendarPageState extends State<CalendarPage> with TickerProviderStateMix
     _selectedEvents = _pblEvents[_selectedDay] ?? [];
     _calendarController = CalendarController();
     //_calendarController.setSelectedDay(DateTime.now());
-
-    
 
     _animationController = AnimationController(
       vsync: this,
@@ -69,7 +64,6 @@ class _CalendarPageState extends State<CalendarPage> with TickerProviderStateMix
   }
 
   void _onDaySelected(DateTime day, List events) {
-    
     setState(() {
       _selectedEvents = events;
       globals.onDay = day;
@@ -77,29 +71,34 @@ class _CalendarPageState extends State<CalendarPage> with TickerProviderStateMix
     });
   }
 
-  void _onVisibleDaysChanged(DateTime first, DateTime last, CalendarFormat format) {
-   
-  }
+  void _onVisibleDaysChanged(
+      DateTime first, DateTime last, CalendarFormat format) {}
 
-  void _onCalendarCreated(DateTime first, DateTime last, CalendarFormat format) {
+  void _onCalendarCreated(
+      DateTime first, DateTime last, CalendarFormat format) {
     final dateTime = DateTime.now();
-    _calendarController.setSelectedDay(DateTime(dateTime.year, dateTime.month, dateTime.day),
-                  );
+    _calendarController.setSelectedDay(
+      DateTime(dateTime.year, dateTime.month, dateTime.day),
+    );
   }
-
 
   Widget _buildTableCalendar() {
     //final dateTime = DateTime.now();
     //_calendarController.setSelectedDay(dateTime);
     return TableCalendar(
+      initialSelectedDay: DateTime.now(),
       calendarController: _calendarController,
-      events: (_pblChecked && _personalChecked)?_masterEvents:(_pblChecked && !_personalChecked)?_pblEvents:
-      (!_pblChecked && _personalChecked)?_personalEvents:_emptyEvents,
+      events: (_pblChecked && _personalChecked)
+          ? _masterEvents
+          : (_pblChecked && !_personalChecked)
+              ? _pblEvents
+              : (!_pblChecked && _personalChecked)
+                  ? _personalEvents
+                  : _emptyEvents,
 
       //holidays: _pblEvents,
       startingDayOfWeek: StartingDayOfWeek.sunday,
       calendarStyle: CalendarStyle(
-        
         selectedStyle: TextStyle(color: Colors.yellow[600]),
         weekdayStyle: TextStyle(color: globals.pblblue),
         weekendStyle: TextStyle(color: Colors.yellow[800]),
@@ -111,7 +110,8 @@ class _CalendarPageState extends State<CalendarPage> with TickerProviderStateMix
       ),
       headerStyle: HeaderStyle(
         //titleTextStyle: TextStyle(color: globals.pblblue),
-        formatButtonTextStyle: TextStyle().copyWith(color: Colors.white, fontSize: 15.0),
+        formatButtonTextStyle:
+            TextStyle().copyWith(color: Colors.white, fontSize: 15.0),
         formatButtonDecoration: BoxDecoration(
           color: globals.pblblue,
           borderRadius: BorderRadius.circular(16.0),
@@ -215,7 +215,7 @@ class _CalendarPageState extends State<CalendarPage> with TickerProviderStateMix
     );
   }
 */
- /* Widget _buildEventsMarker(DateTime date, List events) {
+  /* Widget _buildEventsMarker(DateTime date, List events) {
     return AnimatedContainer(
       duration: const Duration(milliseconds: 300),
       decoration: BoxDecoration(
@@ -248,11 +248,9 @@ class _CalendarPageState extends State<CalendarPage> with TickerProviderStateMix
 */
   Widget _buildButtons() {
     final dateTime = DateTime.now();
-    
 
     return Column(
       children: <Widget>[
-        
         RaisedButton(
           child: Text('Refresh Calendar'),
           onPressed: () {
@@ -274,328 +272,361 @@ class _CalendarPageState extends State<CalendarPage> with TickerProviderStateMix
                   border: Border.all(width: 0.8),
                   borderRadius: BorderRadius.circular(12.0),
                 ),
-                margin: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+                margin:
+                    const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
                 child: ListTile(
-                  title: Text(event.toString()),
-                  onTap: () {
-                    _showAlert(context, event, document);
-                    print('$event tapped!');
-                    // AlertDialog(
+                    title: Text(event.toString()),
+                    onTap: () {
+                      _showAlert(context, event, document);
+                      print('$event tapped!');
+                      // AlertDialog(
 
-                    // );
-                  }
-                ),
+                      // );
+                    }),
               ))
           .toList(),
     );
   }
 
-    _showAlert(BuildContext context, dynamic event, AsyncSnapshot<dynamic> snapshot){
-      int useThisI = -1;
-      for (int i = 0; i < snapshot.data.documents.length; i++){
-        if (event.toString() == snapshot.data.documents[i]['Title']){
-          useThisI = i;
-        }
+  _showAlert(
+      BuildContext context, dynamic event, AsyncSnapshot<dynamic> snapshot) {
+    int useThisI = -1;
+    for (int i = 0; i < snapshot.data.documents.length; i++) {
+      if (event.toString() == snapshot.data.documents[i]['Title']) {
+        useThisI = i;
       }
+    }
     // set up the buttons
-  Widget editButton = FlatButton(
-    child: Text("Edit"),
-    onPressed:  (){
-      Navigator.pop(context);
-    },
-  );
-  Widget deleteButton = FlatButton(
-    child: Text("Delete"),
-    onPressed:  () {
-      print(useThisI);
-      _showDeleteAlert(context, useThisI, snapshot);
-      // if (globals.deleteCalEvent){
-      //   Firestore.instance.collection("Calendar").document('$useThisI').delete();
-      //   globals.deleteCalEvent = false;
-      // }
-      //Navigator.pop(context);
-    },
-  );
-  Widget doneButton = FlatButton(
-    child: Text("Done"),
-    onPressed:  (){
-      Navigator.pop(context);
-    },
-  );
+    Widget editButton = FlatButton(
+      child: Text("Edit"),
+      onPressed: () {
+        Navigator.pop(context);
+      },
+    );
+    Widget deleteButton = FlatButton(
+      child: Text("Delete"),
+      onPressed: () {
+        print(useThisI);
+        _showDeleteAlert(context, useThisI, snapshot);
+        if (globals.deleteCalEvent) {
+          _calendarController.setSelectedDay(
+            DateTime(
+                globals.onDay.year, globals.onDay.month, globals.onDay.day),
+            runCallback: true,
+          );
+        }
 
-  // set up the AlertDialog
-  int calType = snapshot.data.documents[useThisI]['Calendar Choice'];
-  String calTypeS;
-  (calType == 0)?calTypeS = "Personal":calTypeS = "PBL";
-  AlertDialog alert = AlertDialog(
-    title: Text("$event"),
-    content: (snapshot.data.documents[useThisI]['Dress Code'] == 'N/A' && snapshot.data.documents[useThisI]['Location'] == 'N/A')?
-    Text('${snapshot.data.documents[useThisI]['Print Start Date']} - ${snapshot.data.documents[useThisI]['Print End Date']}\n\nCalendar Type: $calTypeS'):
-    (snapshot.data.documents[useThisI]['Dress Code'] != 'N/A' && snapshot.data.documents[useThisI]['Location'] == 'N/A')?
-    Text('${snapshot.data.documents[useThisI]['Print Start Date']} - ${snapshot.data.documents[useThisI]['Print End Date']} \n\nDress Code: ${snapshot.data.documents[useThisI]['Dress Code']}\n\nCalendar Type: $calTypeS'):
-    (snapshot.data.documents[useThisI]['Dress Code'] == 'N/A' && snapshot.data.documents[useThisI]['Location'] != 'N/A')?
-    Text('${snapshot.data.documents[useThisI]['Print Start Date']} - ${snapshot.data.documents[useThisI]['Print End Date']} \n\nLocation: ${snapshot.data.documents[useThisI]['Location']}\n\nCalendar Type: $calTypeS'):
-    Text('${snapshot.data.documents[useThisI]['Print Start Date']} - ${snapshot.data.documents[useThisI]['Print End Date']} \n\nLocation: ${snapshot.data.documents[useThisI]['Location']} \n\nDress Code: ${snapshot.data.documents[useThisI]['Dress Code']}\n\nCalendar Type: $calTypeS')
-    ,actions: [
-      (globals.level > 1 || snapshot.data.documents[useThisI]['Calendar Choice'] < 1)?editButton:null,
-      (globals.level > 1 || snapshot.data.documents[useThisI]['Calendar Choice'] < 1)?deleteButton:null,
-      doneButton
-    ],
-  );
+        if (globals.deleteCalEvent) {
+          FirebaseFirestore.instance
+              .collection("Calendar")
+              .doc('$useThisI')
+              .delete();
+          globals.deleteCalEvent = false;
+        }
+        //Navigator.pop(context);
+      },
+    );
+    Widget doneButton = FlatButton(
+      child: Text("Done"),
+      onPressed: () {
+        Navigator.pop(context);
+      },
+    );
 
-  // show the dialog
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return alert;
-    },
-  );
-  }
- 
-  _showDeleteAlert(BuildContext context, int useThisI, AsyncSnapshot<dynamic> snapshot){
-    // set up the buttons
-  Widget cancelButton = FlatButton(
-    child: Text("No"),
-    onPressed:  (){
-      Navigator.pop(context);
-    },
-  );
-  Widget continueButton = FlatButton(
-    child: Text("Yes"),
-    onPressed:  () {
-      //globals.deleteCalEvent = true;
-      //Firestore.instance.collection("Usernames").document(document["Username"].toString()).delete();
-      setState(() {
-        print('got here');
-        DateTime _selectedDay = globals.onDay;
-        print(_selectedDay.toString());
-        _selectedEvents = globals.events;
-        // if (snapshot.data.documents[useThisI]['Calendar Choice'] == 0){
-        //   DateTime keyTime = DateTime.now();
-        //   if (_personalEvents.containsKey(keyTime)){
-        //     _personalEvents[keyTime].add(snapshot.data.documents[useThisI]['Entry']);
-        //   }
-        //   else{
-        //     _personalEvents[keyTime] = [snapshot.data.documents[useThisI]['Entry']];
-        //   }
-        //   if (_masterEvents.containsKey(keyTime)){
-        //           _masterEvents[keyTime].add(snapshot.data.documents[useThisI]['Entry']);
-        //         }
-        //         else{
-        //           _masterEvents[keyTime] = [snapshot.data.documents[useThisI]['Entry']];
-        //         }
-        // }
-      });
-      Firestore.instance.collection("Calendar").document('${snapshot.data.documents[useThisI]['Entry']}').delete();
-      
-      // setState(() {
-      //   final dateTime = DateTime.now().subtract(Duration(days: 1));
-      //             _calendarController.setSelectedDay(
-      //             DateTime(dateTime.year, dateTime.month, dateTime.day),
-      //             runCallback: true,
-      //       );
-      // });
-      
-      Navigator.pop(context);
-      Navigator.pop(context);
-      
-    },
-  );
+    // set up the AlertDialog
+    int calType = snapshot.data.documents[useThisI]['Calendar Choice'];
+    String calTypeS;
+    (calType == 0) ? calTypeS = "Personal" : calTypeS = "PBL";
+    AlertDialog alert = AlertDialog(
+      title: Text("$event"),
+      content: (snapshot.data.documents[useThisI]['Dress Code'] == 'N/A' &&
+              snapshot.data.documents[useThisI]['Location'] == 'N/A')
+          ? Text(
+              '${snapshot.data.documents[useThisI]['Print Start Date']} - ${snapshot.data.documents[useThisI]['Print End Date']}\n\nCalendar Type: $calTypeS')
+          : (snapshot.data.documents[useThisI]['Dress Code'] != 'N/A' &&
+                  snapshot.data.documents[useThisI]['Location'] == 'N/A')
+              ? Text(
+                  '${snapshot.data.documents[useThisI]['Print Start Date']} - ${snapshot.data.documents[useThisI]['Print End Date']} \n\nDress Code: ${snapshot.data.documents[useThisI]['Dress Code']}\n\nCalendar Type: $calTypeS')
+              : (snapshot.data.documents[useThisI]['Dress Code'] == 'N/A' &&
+                      snapshot.data.documents[useThisI]['Location'] != 'N/A')
+                  ? Text(
+                      '${snapshot.data.documents[useThisI]['Print Start Date']} - ${snapshot.data.documents[useThisI]['Print End Date']} \n\nLocation: ${snapshot.data.documents[useThisI]['Location']}\n\nCalendar Type: $calTypeS')
+                  : Text(
+                      '${snapshot.data.documents[useThisI]['Print Start Date']} - ${snapshot.data.documents[useThisI]['Print End Date']} \n\nLocation: ${snapshot.data.documents[useThisI]['Location']} \n\nDress Code: ${snapshot.data.documents[useThisI]['Dress Code']}\n\nCalendar Type: $calTypeS'),
+      actions: [
+        (globals.level > 1 ||
+                snapshot.data.documents[useThisI]['Calendar Choice'] < 1)
+            ? editButton
+            : null,
+        (globals.level > 1 ||
+                snapshot.data.documents[useThisI]['Calendar Choice'] < 1)
+            ? deleteButton
+            : null,
+        doneButton
+      ],
+    );
 
-  // set up the AlertDialog
-  AlertDialog alert = AlertDialog(
-    title: Text("Confirmation"),
-    content: Text('Are you sure you want to delete this event?'),
-    actions: [
-      cancelButton,
-      continueButton,
-    ],
-  );
-
-  // show the dialog
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return alert;
-    },
-  );
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
   }
 
+  _showDeleteAlert(
+      BuildContext context, int useThisI, AsyncSnapshot<dynamic> snapshot) {
+    // set up the buttons
+    Widget cancelButton = FlatButton(
+      child: Text("No"),
+      onPressed: () {
+        Navigator.pop(context);
+      },
+    );
+    Widget continueButton = FlatButton(
+      child: Text("Yes"),
+      onPressed: () {
+        //globals.deleteCalEvent = true;
+        //Firestore.instance.collection("Usernames").document(document["Username"].toString()).delete();
+        setState(() {
+          print('got here');
+          DateTime _selectedDay = globals.onDay;
+          print(_selectedDay.toString());
+          doFoo();
+          _selectedEvents = globals.events;
+          // if (snapshot.data.documents[useThisI]['Calendar Choice'] == 0){
+          //   DateTime keyTime = DateTime.now();
+          //   if (_personalEvents.containsKey(keyTime)){
+          //     _personalEvents[keyTime].add(snapshot.data.documents[useThisI]['Entry']);
+          //   }
+          //   else{
+          //     _personalEvents[keyTime] = [snapshot.data.documents[useThisI]['Entry']];
+          //   }
+          //   if (_masterEvents.containsKey(keyTime)){
+          //           _masterEvents[keyTime].add(snapshot.data.documents[useThisI]['Entry']);
+          //         }
+          //         else{
+          //           _masterEvents[keyTime] = [snapshot.data.documents[useThisI]['Entry']];
+          //         }
+          // }
+        });
+        FirebaseFirestore.instance
+            .collection("Calendar")
+            .doc('${snapshot.data.documents[useThisI]['Entry']}')
+            .delete();
+
+        // setState(() {
+        //   final dateTime = DateTime.now().subtract(Duration(days: 1));
+        //             _calendarController.setSelectedDay(
+        //             DateTime(dateTime.year, dateTime.month, dateTime.day),
+        //             runCallback: true,
+        //       );
+        // });
+
+        Navigator.pop(context);
+        Navigator.pop(context);
+      },
+    );
+
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: Text("Confirmation"),
+      content: Text('Are you sure you want to delete this event?'),
+      actions: [
+        cancelButton,
+        continueButton,
+      ],
+    );
+
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
-      
-      // floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      // floatingActionButton: FloatingActionButton(
-        
-      //   onPressed: (){
-      //     Navigator.push(context, new MaterialPageRoute(
-      //       builder: (BuildContext context) => new AddEventsPage()),
-      //     );
-      //   },
-      //   tooltip: 'Increment',
-      //   child: Icon(Icons.add),
-      // ), // This
-      bottomNavigationBar: BottomAppBar(
-        shape: CircularNotchedRectangle(),
-        child: Container(
-          height: 75,
-          child: 
-            Row(
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Container(
-                  height: 75,
-                  width: 165,
-                  child: 
-                    CheckboxListTile(
-                      onChanged: (bool value){
-                        setState(() {
-                          _pblChecked = value;
-                        });
-                      },
-                      controlAffinity: ListTileControlAffinity.leading,
-                      title: Text(
-                        'PBL Calendar',
-                        
-                        style: TextStyle(
-                          fontSize: 18,
-                        )
-                      ),
-                      value: _pblChecked,
-                    ),
-                ),
-                  Container(
-                  height: 75,
-                  width: 165,
-                  child: 
-                    CheckboxListTile(
-                      onChanged: (bool value){
-                        setState(() {
-                          _personalChecked = value;
-                        });
-                      },
-                      controlAffinity: ListTileControlAffinity.leading,
-                      title: Text(
-                        'My Calendar',
-                        
-                        style: TextStyle(
-                          fontSize: 18,
-                        )
-                      ),
-                      value: _personalChecked,
-                    ),
-                ),
-                
-              
-              ]
 
-          )
+        // floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+        // floatingActionButton: FloatingActionButton(
+
+        //   onPressed: (){
+        //     Navigator.push(context, new MaterialPageRoute(
+        //       builder: (BuildContext context) => new AddEventsPage()),
+        //     );
+        //   },
+        //   tooltip: 'Increment',
+        //   child: Icon(Icons.add),
+        // ), // This
+        bottomNavigationBar: BottomAppBar(
+          shape: CircularNotchedRectangle(),
+          child: Container(
+              height: 75,
+              child: Row(
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Container(
+                      height: 75,
+                      width: 165,
+                      child: CheckboxListTile(
+                        onChanged: (bool value) {
+                          setState(() {
+                            _pblChecked = value;
+                          });
+                        },
+                        controlAffinity: ListTileControlAffinity.leading,
+                        title: Text('PBL Calendar',
+                            style: TextStyle(
+                              fontSize: 18,
+                            )),
+                        value: _pblChecked,
+                      ),
+                    ),
+                    Container(
+                      height: 75,
+                      width: 165,
+                      child: CheckboxListTile(
+                        onChanged: (bool value) {
+                          setState(() {
+                            _personalChecked = value;
+                          });
+                        },
+                        controlAffinity: ListTileControlAffinity.leading,
+                        title: Text('My Calendar',
+                            style: TextStyle(
+                              fontSize: 18,
+                            )),
+                        value: _personalChecked,
+                      ),
+                    ),
+                  ])),
         ),
-      ),
-      appBar: new AppBar(
-        centerTitle: true,
-        backgroundColor: globals.pblblue,
-        title: new Text('Calendar'),
-        actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.add),
-            onPressed: (){
-              Navigator.push(context, new MaterialPageRoute(
-                builder: (BuildContext context) => new AddEventsPage()),
-              ).then((value) {
-                setState(() {
-                  final dateTime = DateTime.now();
-                  _calendarController.setSelectedDay(
-                  DateTime(dateTime.year, dateTime.month, dateTime.day),
-                  runCallback: true,
-            );
+        appBar: new AppBar(
+          centerTitle: true,
+          backgroundColor: globals.pblblue,
+          title: new Text('Calendar'),
+          actions: <Widget>[
+            IconButton(
+              icon: Icon(Icons.add),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  new MaterialPageRoute(
+                      builder: (BuildContext context) => new AddEventsPage()),
+                ).then((value) {
+                  setState(() {
+                    final dateTime = DateTime.now();
+                    _calendarController.setSelectedDay(
+                      DateTime(dateTime.year, dateTime.month, dateTime.day),
+                      runCallback: true,
+                    );
+                  });
                 });
-               });
-            },
-          )
-        ],
-      ),
-      body: StreamBuilder(
-        stream: Firestore.instance.collection('Calendar').snapshots(),
-        builder: (context, snapshot) {
-          if (!snapshot.hasData) return const Text('Loading...');
-          
-          //clear event list
-          _masterEvents.clear();
-          _personalEvents.clear();
-          _pblEvents.clear();
+              },
+            )
+          ],
+        ),
+        body: StreamBuilder(
+            stream:
+                FirebaseFirestore.instance.collection('Calendar').snapshots(),
+            builder: (context, snapshot) {
+              if (!snapshot.hasData) return const Text('Loading...');
 
-          //DateTime test = DateTime.utc(2020, 07, 27);
-          if (snapshot.data.documents.length > 1){
-            
-            for (int i = 0; i < snapshot.data.documents.length - 1; i++){
-              DateTime keyTime = DateTime.utc(int.parse(snapshot.data.documents[i]['Start'].toString().substring(0,4)),
-              int.parse(snapshot.data.documents[i]['Start'].toString().substring(5,7)),
-              int.parse(snapshot.data.documents[i]['Start'].toString().substring(8,10)));
-              
+              //clear event list
+              _masterEvents.clear();
+              _personalEvents.clear();
+              _pblEvents.clear();
 
-              if (snapshot.data.documents[i]['Calendar Choice'] == 0){
-                if (snapshot.data.documents[i]['Username'] == globals.username){
-                  if (_personalEvents.containsKey(keyTime)){
-                    _personalEvents[keyTime].add(snapshot.data.documents[i]['Title']);
-                  }
-                  else{
-                    _personalEvents[keyTime] = [snapshot.data.documents[i]['Title']];
-                  }
-                  if (_masterEvents.containsKey(keyTime)){
-                    _masterEvents[keyTime].add(snapshot.data.documents[i]['Title']);
-                  }
-                  else{
-                    _masterEvents[keyTime] = [snapshot.data.documents[i]['Title']];
+              //DateTime test = DateTime.utc(2020, 07, 27);
+              if (snapshot.data.documents.length > 1) {
+                for (int i = 0; i < snapshot.data.documents.length - 1; i++) {
+                  DateTime keyTime = DateTime.utc(
+                      int.parse(snapshot.data.documents[i]['Start']
+                          .toString()
+                          .substring(0, 4)),
+                      int.parse(snapshot.data.documents[i]['Start']
+                          .toString()
+                          .substring(5, 7)),
+                      int.parse(snapshot.data.documents[i]['Start']
+                          .toString()
+                          .substring(8, 10)));
+
+                  if (snapshot.data.documents[i]['Calendar Choice'] == 0) {
+                    if (snapshot.data.documents[i]['Username'] ==
+                        globals.username) {
+                      if (_personalEvents.containsKey(keyTime)) {
+                        _personalEvents[keyTime]
+                            .add(snapshot.data.documents[i]['Title']);
+                      } else {
+                        _personalEvents[keyTime] = [
+                          snapshot.data.documents[i]['Title']
+                        ];
+                      }
+                      if (_masterEvents.containsKey(keyTime)) {
+                        _masterEvents[keyTime]
+                            .add(snapshot.data.documents[i]['Title']);
+                      } else {
+                        _masterEvents[keyTime] = [
+                          snapshot.data.documents[i]['Title']
+                        ];
+                      }
+                    }
+                  } else {
+                    if (_pblEvents.containsKey(keyTime)) {
+                      _pblEvents[keyTime]
+                          .add(snapshot.data.documents[i]['Title']);
+                    } else {
+                      _pblEvents[keyTime] = [
+                        snapshot.data.documents[i]['Title']
+                      ];
+                    }
+                    if (_masterEvents.containsKey(keyTime)) {
+                      _masterEvents[keyTime]
+                          .add(snapshot.data.documents[i]['Title']);
+                    } else {
+                      _masterEvents[keyTime] = [
+                        snapshot.data.documents[i]['Title']
+                      ];
+                    }
                   }
                 }
-                
               }
-              else{
-                if (_pblEvents.containsKey(keyTime)){
-                  _pblEvents[keyTime].add(snapshot.data.documents[i]['Title']);
-                }
-                else{
-                  _pblEvents[keyTime] = [snapshot.data.documents[i]['Title']];
-                }
-                if (_masterEvents.containsKey(keyTime)){
-                  _masterEvents[keyTime].add(snapshot.data.documents[i]['Title']);
-                }
-                else{
-                  _masterEvents[keyTime] = [snapshot.data.documents[i]['Title']];
-                }
-              }
-            }
-          }
 
+              //_pblEvents[test] = ['food'];
+              //_pblEvents[test].add(['value']);
 
-          
+              //_masterEvents[test] = ['food'];
+              //_masterEvents[test].add(['value']);
+              return Column(
+                mainAxisSize: MainAxisSize.max,
+                children: <Widget>[
+                  // Switch out 2 lines below to play with TableCalendar's settings
+                  //-----------------------
+                  _buildTableCalendar(),
 
+                  //_buildTableCalendarWithBuilders(),
+                  const SizedBox(height: 8.0),
+                  _buildButtons(),
+                  const SizedBox(height: 8.0),
+                  Expanded(child: _buildEventList(snapshot)),
+                  //doFoo(),
+                ],
+              );
+            }));
+  }
 
-          
-          //_pblEvents[test] = ['food'];
-          //_pblEvents[test].add(['value']);
-
-          //_masterEvents[test] = ['food'];
-          //_masterEvents[test].add(['value']);
-          return Column(
-            mainAxisSize: MainAxisSize.max,
-            children: <Widget>[
-          // Switch out 2 lines below to play with TableCalendar's settings
-          //-----------------------
-            _buildTableCalendar(),
-             //_buildTableCalendarWithBuilders(),
-              const SizedBox(height: 8.0),
-              _buildButtons(),
-              const SizedBox(height: 8.0),
-              Expanded(child: _buildEventList(snapshot)),
-            ],
-          );
-        }
-      )
+  Widget doFoo() {
+    final dateTime = DateTime.now();
+    _calendarController.setSelectedDay(
+      DateTime(dateTime.year, dateTime.month, dateTime.day),
+      runCallback: true,
     );
+    return Container();
   }
 }
