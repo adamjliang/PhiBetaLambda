@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:prof_frat_app/addUsers.dart';
+import 'package:prof_frat_app/mutators.dart';
 //import 'package:prof_frat_app/custom_icons_icons.dart';
 import './profile.dart';
 import './login.dart';
@@ -9,7 +10,7 @@ import './homework.dart';
 import './globals.dart' as globals;
 import 'package:url_launcher/url_launcher.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-import 'package:geolocator/geolocator.dart';
+//import 'package:geolocator/geolocator.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -68,10 +69,9 @@ class HomeScreen extends State<Home> {
   //   }
   // }
   void _printCurrentLocation() async {
-    final position = await Geolocator()
-        .getCurrentPosition(desiredAccuracy: LocationAccuracy.medium);
-
-    print(position);
+    // final position = await Geolocator()
+    //     .getCurrentPosition()
+    //     .then((value) => {print(value.toString())});
   }
 
   @override
@@ -341,6 +341,18 @@ class HomeScreen extends State<Home> {
                 //     _launchRush();
                 //   }
                 // ),
+                (globals.level == 1000)
+                    ? ListTile(
+                        title: new Center(child: Text('Mutators')),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            new MaterialPageRoute(
+                                builder: (BuildContext context) =>
+                                    new MutatorsPage()),
+                          );
+                        })
+                    : Container(),
                 (globals.logged)
                     ? ListTile(
                         title: new Center(child: Text('Sign Out')),

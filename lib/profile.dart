@@ -1,9 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import './globals.dart' as globals;
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+//import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+
 //import 'package:font_awesome_flutter/_example/icons.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -12,7 +15,8 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  var _image;
+  //PickedFile _image;
+  File _imageFile;
   var _passUnlock = false;
   var _birthdayUnlock = false;
   var _phoneUnlock = false;
@@ -25,6 +29,7 @@ class _ProfilePageState extends State<ProfilePage> {
   bool changePhone = false;
   bool changeMajor = false;
   bool changeYear = false;
+  bool changePicture = false;
 
   FocusNode _passFocus;
   var _setStatePasswordAgain = false;
@@ -58,13 +63,34 @@ class _ProfilePageState extends State<ProfilePage> {
     super.dispose();
   }
 
+  Future uploadImageToFirebase(BuildContext context) async {
+    globals.globalChangePicture = true;
+    //print('here');
+    String fileName = _imageFile.toString();
+    StorageReference firebaseStorageRef =
+        FirebaseStorage.instance.ref().child('uploads/$fileName');
+    StorageUploadTask uploadTask = firebaseStorageRef.putFile(_imageFile);
+    StorageTaskSnapshot taskSnapshot = await uploadTask.onComplete;
+    taskSnapshot.ref.getDownloadURL().then(
+          (value) => {print(value), globals.profileurl = value},
+        );
+
+    print('done');
+
+    //setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     AssetImage defaultpp = AssetImage('assets/default_profile_pic.jpg');
-    Future getImage() async {
-      var image = await ImagePicker().getImage(source: ImageSource.gallery);
+    Future getImage(BuildContext context) async {
+      final image = await ImagePicker().getImage(source: ImageSource.gallery);
+
       setState(() {
-        _image = image;
+        _imageFile = File(image.path);
+        //_image = image;
+        uploadImageToFirebase(context);
+        //globals.userProfilePicture = _imageFile;
       });
     }
 
@@ -110,7 +136,40 @@ class _ProfilePageState extends State<ProfilePage> {
                 }
               }
 
+              // any changes to the firebase database can start to be made
+              // after the previous for loop
+              var userProfilePicture = NetworkImage(
+                  'https://firebasestorage.googleapis.com/v0/b/phi-beta-lambda-calendar.appspot.com/o/uploads%2FFile%3A%20\'%2FUsers%2Fadamliang%2FLibrary%2FDeveloper%2FCoreSimulator%2FDevices%2FCF449B6A-2D5A-4D18-96ED-914F2E9DFA12%2Fdata%2FContainers%2FData%2FApplication%2F03D91332-AD26-4C98-9ED5-5E2BDC8108FD%2Ftmp%2Fdefault_profile_pic.jpg?alt=media&token=0ac5b69a-b2e9-4e77-9143-2bd26b08c449');
+              if (snapshot.data.documents[iToUse]['ppurl'] != '' &&
+                  snapshot.data.documents[iToUse]['ppurl'] != 'null') {
+                userProfilePicture =
+                    NetworkImage(snapshot.data.documents[iToUse]['ppurl']);
+              }
+
+              if (globals.globalChangePicture && globals.profileurl != null) {
+                FirebaseFirestore.instance
+                    .collection("Usernames")
+                    .doc('$usernameValue')
+                    .set({
+                  'First Name':
+                      '${snapshot.data.documents[iToUse]['First Name']}',
+                  'Last Name':
+                      '${snapshot.data.documents[iToUse]['Last Name']}',
+                  'Username': '${snapshot.data.documents[iToUse]['Username']}',
+                  'Password': '${snapshot.data.documents[iToUse]['Password']}',
+                  'Clearance': snapshot.data.documents[iToUse]['Clearance'],
+                  'Birthday': '${snapshot.data.documents[iToUse]['Birthday']}',
+                  'Major': '${snapshot.data.documents[iToUse]['Major']}',
+                  'Year': '${snapshot.data.documents[iToUse]['Year']}',
+                  'Phone Number':
+                      '${snapshot.data.documents[iToUse]['Phone Number']}',
+                  'ppurl': '${globals.profileurl}',
+                });
+                globals.globalChangePicture = false;
+              }
+
               if (changeYear) {
+                print('here');
                 FirebaseFirestore.instance
                     .collection("Usernames")
                     .doc('$usernameValue')
@@ -127,6 +186,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   'Year': '${globals.changedText}',
                   'Phone Number':
                       '${snapshot.data.documents[iToUse]['Phone Number']}',
+                  'ppurl': '${snapshot.data.documents[iToUse]['ppurl']}',
                 });
                 changeYear = false;
               }
@@ -147,6 +207,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   'Year': '${snapshot.data.documents[iToUse]['Year']}',
                   'Phone Number':
                       '${snapshot.data.documents[iToUse]['Phone Number']}',
+                  'ppurl': '${snapshot.data.documents[iToUse]['ppurl']}',
                 });
                 changePassword = false;
               }
@@ -167,6 +228,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   'Year': '${snapshot.data.documents[iToUse]['Year']}',
                   'Phone Number':
                       '${snapshot.data.documents[iToUse]['Phone Number']}',
+                  'ppurl': '${snapshot.data.documents[iToUse]['ppurl']}',
                 });
                 changeBirthday = false;
               }
@@ -186,6 +248,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   'Major': '${snapshot.data.documents[iToUse]['Major']}',
                   'Year': '${snapshot.data.documents[iToUse]['Year']}',
                   'Phone Number': '${globals.changedText}',
+                  'ppurl': '${snapshot.data.documents[iToUse]['ppurl']}',
                 });
                 changePhone = false;
               }
@@ -206,6 +269,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   'Year': '${snapshot.data.documents[iToUse]['Year']}',
                   'Phone Number':
                       '${snapshot.data.documents[iToUse]['Phone Number']}',
+                  'ppurl': '${snapshot.data.documents[iToUse]['ppurl']}',
                 });
                 changeMajor = false;
               }
@@ -226,7 +290,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   SizedBox(height: 20),
                   InkWell(
                     onTap: () {
-                      getImage();
+                      getImage(context);
                     },
                     child: Align(
                       alignment: Alignment.center,
@@ -237,8 +301,13 @@ class _ProfilePageState extends State<ProfilePage> {
                           child: SizedBox(
                             width: 180,
                             height: 180,
-                            child:
-                                new Image(image: defaultpp, fit: BoxFit.fill),
+                            child: (snapshot.data.documents[iToUse]['ppurl'] !=
+                                    'null')
+                                ? new Image(
+                                    image: userProfilePicture,
+                                    fit: BoxFit.fill,
+                                  )
+                                : new Image(image: defaultpp, fit: BoxFit.fill),
                           ),
                         ),
                       ),
@@ -590,7 +659,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
   _submittedNewFieldPassword(String x) {
     // set up the buttons
-    Widget cancelButton = FlatButton(
+    Widget cancelButton = TextButton(
       child: Text("No"),
       onPressed: () {
         setState(() {
@@ -599,7 +668,7 @@ class _ProfilePageState extends State<ProfilePage> {
         Navigator.pop(context);
       },
     );
-    Widget continueButton = FlatButton(
+    Widget continueButton = TextButton(
       child: Text("Yes"),
       onPressed: () {
         setState(() {
@@ -634,7 +703,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
   _submittedNewFieldBirthday(String x) {
     // set up the buttons
-    Widget cancelButton = FlatButton(
+    Widget cancelButton = TextButton(
       child: Text("No"),
       onPressed: () {
         setState(() {
@@ -643,7 +712,7 @@ class _ProfilePageState extends State<ProfilePage> {
         Navigator.pop(context);
       },
     );
-    Widget continueButton = FlatButton(
+    Widget continueButton = TextButton(
       child: Text("Yes"),
       onPressed: () {
         setState(() {
@@ -677,7 +746,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
   _submittedNewFieldYear(String x) {
     // set up the buttons
-    Widget cancelButton = FlatButton(
+    Widget cancelButton = TextButton(
       child: Text("No"),
       onPressed: () {
         setState(() {
@@ -686,7 +755,7 @@ class _ProfilePageState extends State<ProfilePage> {
         Navigator.pop(context);
       },
     );
-    Widget continueButton = FlatButton(
+    Widget continueButton = TextButton(
       child: Text("Yes"),
       onPressed: () {
         setState(() {
@@ -720,7 +789,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
   _submittedNewFieldMajor(String x) {
     // set up the buttons
-    Widget cancelButton = FlatButton(
+    Widget cancelButton = TextButton(
       child: Text("No"),
       onPressed: () {
         setState(() {
@@ -729,7 +798,7 @@ class _ProfilePageState extends State<ProfilePage> {
         Navigator.pop(context);
       },
     );
-    Widget continueButton = FlatButton(
+    Widget continueButton = TextButton(
       child: Text("Yes"),
       onPressed: () {
         setState(() {
@@ -763,7 +832,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
   _submittedNewFieldPhone(String x) {
     // set up the buttons
-    Widget cancelButton = FlatButton(
+    Widget cancelButton = TextButton(
       child: Text("No"),
       onPressed: () {
         setState(() {
@@ -772,7 +841,7 @@ class _ProfilePageState extends State<ProfilePage> {
         Navigator.pop(context);
       },
     );
-    Widget continueButton = FlatButton(
+    Widget continueButton = TextButton(
       child: Text("Yes"),
       onPressed: () {
         setState(() {

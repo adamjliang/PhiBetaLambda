@@ -251,7 +251,7 @@ class _CalendarPageState extends State<CalendarPage>
 
     return Column(
       children: <Widget>[
-        RaisedButton(
+        ElevatedButton(
           child: Text('Refresh Calendar'),
           onPressed: () {
             _calendarController.setSelectedDay(
@@ -297,13 +297,13 @@ class _CalendarPageState extends State<CalendarPage>
       }
     }
     // set up the buttons
-    Widget editButton = FlatButton(
+    Widget editButton = TextButton(
       child: Text("Edit"),
       onPressed: () {
         Navigator.pop(context);
       },
     );
-    Widget deleteButton = FlatButton(
+    Widget deleteButton = TextButton(
       child: Text("Delete"),
       onPressed: () {
         print(useThisI);
@@ -326,7 +326,7 @@ class _CalendarPageState extends State<CalendarPage>
         //Navigator.pop(context);
       },
     );
-    Widget doneButton = FlatButton(
+    Widget doneButton = TextButton(
       child: Text("Done"),
       onPressed: () {
         Navigator.pop(context);
@@ -378,13 +378,13 @@ class _CalendarPageState extends State<CalendarPage>
   _showDeleteAlert(
       BuildContext context, int useThisI, AsyncSnapshot<dynamic> snapshot) {
     // set up the buttons
-    Widget cancelButton = FlatButton(
+    Widget cancelButton = TextButton(
       child: Text("No"),
       onPressed: () {
         Navigator.pop(context);
       },
     );
-    Widget continueButton = FlatButton(
+    Widget continueButton = TextButton(
       child: Text("Yes"),
       onPressed: () {
         //globals.deleteCalEvent = true;

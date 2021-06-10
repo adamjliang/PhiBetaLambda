@@ -74,13 +74,13 @@ class _UserInfoListPageState extends State<UserInfoListPage> {
 
   _showDeleteAlert(BuildContext context, DocumentSnapshot document) {
     // set up the buttons
-    Widget cancelButton = FlatButton(
+    Widget cancelButton = TextButton(
       child: Text("No"),
       onPressed: () {
         Navigator.pop(context);
       },
     );
-    Widget continueButton = FlatButton(
+    Widget continueButton = TextButton(
       child: Text("Yes"),
       onPressed: () {
         FirebaseFirestore.instance

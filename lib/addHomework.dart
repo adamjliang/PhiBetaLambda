@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import './userInfoList.dart';
+//import './userInfoList.dart';
 import 'package:flutter/material.dart';
 import './globals.dart' as globals;
 
