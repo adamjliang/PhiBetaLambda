@@ -11,7 +11,7 @@ class ViewProfilePage extends StatefulWidget {
 }
 
 class _ViewProfilePageState extends State<ViewProfilePage> {
-  var _passUnlock = false;
+  //var _passUnlock = false;
   var _birthdayUnlock = false;
   var _phoneUnlock = false;
   var _majorUnlock = false;
@@ -211,8 +211,8 @@ class _ViewProfilePageState extends State<ViewProfilePage> {
               changeMajor = false;
             }
 
-            var _passwordController = TextEditingController(
-                text: '${snapshot.data.documents[iToUse]['Password']}');
+            //var _passwordController = TextEditingController(
+            //text: '${snapshot.data.documents[iToUse]['Password']}');
             var _birthdayController = TextEditingController(
                 text: '${snapshot.data.documents[iToUse]['Birthday']}');
             var _phoneController = TextEditingController(
@@ -395,7 +395,7 @@ class _ViewProfilePageState extends State<ViewProfilePage> {
                           _setStateMajorAgain = false;
                           _setStateYearAgain = false;
 
-                          _passUnlock = false;
+                          //_passUnlock = false;
                           _phoneUnlock = false;
                           _majorUnlock = false;
                           _yearUnlock = false;
@@ -449,7 +449,7 @@ class _ViewProfilePageState extends State<ViewProfilePage> {
                           _setStateMajorAgain = false;
                           _setStateYearAgain = false;
 
-                          _passUnlock = false;
+                          //_passUnlock = false;
                           _birthdayUnlock = false;
                           _majorUnlock = false;
                           _yearUnlock = false;
@@ -503,7 +503,7 @@ class _ViewProfilePageState extends State<ViewProfilePage> {
                           _setStateMajorAgain = true;
                           _setStateYearAgain = false;
 
-                          _passUnlock = false;
+                          //_passUnlock = false;
                           _birthdayUnlock = false;
                           _phoneUnlock = false;
                           _yearUnlock = false;
@@ -556,7 +556,7 @@ class _ViewProfilePageState extends State<ViewProfilePage> {
                           _setStateMajorAgain = false;
                           _setStateYearAgain = true;
 
-                          _passUnlock = false;
+                          //_passUnlock = false;
                           _birthdayUnlock = false;
                           _phoneUnlock = false;
                           _majorUnlock = false;

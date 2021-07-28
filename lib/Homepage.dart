@@ -7,9 +7,12 @@ import './login.dart';
 import './calendar.dart';
 import './database.dart';
 import './homework.dart';
+import './voting.dart';
+import './attendance.dart';
 import './globals.dart' as globals;
 import 'package:url_launcher/url_launcher.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import './checkIn.dart';
 //import 'package:geolocator/geolocator.dart';
 
 class Home extends StatefulWidget {
@@ -100,7 +103,12 @@ class HomeScreen extends State<Home> {
                         padding: EdgeInsets.only(left: 28.0),
                         icon: Icon(MdiIcons.checkUnderlineCircleOutline),
                         onPressed: () {
-                          _printCurrentLocation();
+                          Navigator.push(
+                            context,
+                            new MaterialPageRoute(
+                                builder: (BuildContext context) =>
+                                    new CheckInPage()),
+                          );
                         },
                       )
                     : IconButton(
@@ -353,11 +361,36 @@ class HomeScreen extends State<Home> {
                           );
                         })
                     : Container(),
+                (globals.level == 1000)
+                    ? ListTile(
+                        title: new Center(child: Text('Attendance')),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            new MaterialPageRoute(
+                                builder: (BuildContext context) =>
+                                    new AttendancePage()),
+                          );
+                        })
+                    : Container(),
+                (globals.logged)
+                    ? ListTile(
+                        title: new Center(child: Text('Voting')),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            new MaterialPageRoute(
+                                builder: (BuildContext context) =>
+                                    new VotingPage()),
+                          );
+                        })
+                    : Container(),
                 (globals.logged)
                     ? ListTile(
                         title: new Center(child: Text('Sign Out')),
                         onTap: () {
                           setState(() {
+                            globals.level = 0;
                             globals.logged = false;
                             globals.username = "";
                             globals.inputUsername = "";

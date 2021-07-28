@@ -25,7 +25,7 @@ class _DataBasePageState extends State<DataBasePage> {
               return InkWell(
                   onTap: () {},
                   child: SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
+                      scrollDirection: Axis.vertical,
                       child: DataTable(
                         columns: [
                           DataColumn(

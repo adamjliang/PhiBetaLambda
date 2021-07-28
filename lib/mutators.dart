@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:prof_frat_app/addHomework.dart';
+import 'package:prof_frat_app/votingsetup.dart';
+//import 'package:prof_frat_app/addHomework.dart';
 import './globals.dart' as globals;
 
 class MutatorsPage extends StatefulWidget {
@@ -48,7 +49,63 @@ class _MutatorsPageState extends State<MutatorsPage> {
             builder: (context, snapshot) {
               if (!snapshot.hasData) return const Text('Loading...');
               return SingleChildScrollView(
-                  scrollDirection: Axis.vertical, child: Container());
+                scrollDirection: Axis.vertical,
+                child: Column(
+                  children: [
+                    Align(
+                      alignment: Alignment.center,
+                      child: Row(
+                        children: [
+                          Text('Voting'),
+                          Align(
+                            child: Switch(
+                              value: globals.isVoteSwitched,
+                              onChanged: (value) {
+                                setState(() {
+                                  globals.isVoteSwitched = value;
+                                });
+                                if (globals.isVoteSwitched == true) {
+                                  Navigator.push(
+                                    context,
+                                    new MaterialPageRoute(
+                                        builder: (BuildContext context) =>
+                                            new VotingSetupPage()),
+                                  );
+                                } else {
+                                  //turning it off
+                                  //print(globals.gFriendsList);
+                                  globals.gFriendsList = [null];
+                                  //print(globals.gFriendsList);
+                                }
+                              },
+                              activeTrackColor: Colors.lightGreenAccent,
+                              activeColor: Colors.green,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Align(
+                      alignment: Alignment.center,
+                      child: Row(
+                        children: [
+                          Text('Change'),
+                          Switch(
+                            value: globals.isChangeSwitched,
+                            onChanged: (value) {
+                              setState(() {
+                                globals.isChangeSwitched = value;
+                              });
+                            },
+                            activeTrackColor: Colors.lightGreenAccent,
+                            activeColor: Colors.green,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              );
             }));
   }
 }
