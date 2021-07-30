@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import './globals.dart' as globals;
+import './createAccount.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -98,6 +99,35 @@ class _LoginStatePage extends State<LoginPage> {
                                 globals.inputPassword = value;
                               },
                             )),
+                      ),
+                      SizedBox(
+                        height: 25,
+                      ),
+                      InkWell(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            new MaterialPageRoute(
+                                builder: (BuildContext context) =>
+                                    new CreateAccountPage()),
+                          );
+                        },
+                        child: Align(
+                          alignment: Alignment.center,
+                          child: Container(
+                              color: Colors.grey,
+                              width: 175,
+                              height: 50,
+                              child: Align(
+                                alignment: Alignment.center,
+                                child: Text('Create Account',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 20,
+                                    )),
+                              )),
+                        ),
                       ),
                       SizedBox(
                         height: 25,
